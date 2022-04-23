@@ -4,3 +4,4 @@ TOOLCHAIN
 .sshpasswd
 rootfs
 build
+*.tgz
