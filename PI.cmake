@@ -33,8 +33,23 @@ SET (CMAKE_RANLIB ${BIN_PREFIX}-ranlib
 SET (CMAKE_STRIP {BIN_PREFIX}-strip 
             CACHE STRING "Set the cross-compiler tool RANLIB" FORCE)
 
+#link_directories(${rootfs_dir}/usr/lib/aarch64-linux-gnu/)
+
 set(CMAKE_FIND_ROOT_PATH_MODE_PROGRAM NEVER)
 set(CMAKE_FIND_ROOT_PATH_MODE_LIBRARY ONLY)
 set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE arm64)
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT) 
+
+# For QT, we have to tell the System, to not use the binaries from target-fs, but from host-fs:
+set(QT_MOC_EXECUTABLE /usr/bin/moc)
+set(QT_UIC_EXECUTABLE /usr/bin/uic)
+set(QT_RCC_EXECUTABLE /usr/bin/rcc)
+set(Qt5Widgets_UIC_EXECUTABLE /usr/bin/uic)
+
+add_executable(Qt5::moc IMPORTED)
+add_executable(Qt5::uic IMPORTED)
+add_executable(Qt5::rcc IMPORTED)
+set_property(TARGET Qt5::moc PROPERTY IMPORTED_LOCATION ${QT_MOC_EXECUTABLE})
+set_property(TARGET Qt5::uic PROPERTY IMPORTED_LOCATION ${QT_UIC_EXECUTABLE})
+set_property(TARGET Qt5::rcc PROPERTY IMPORTED_LOCATION ${QT_RCC_EXECUTABLE})
