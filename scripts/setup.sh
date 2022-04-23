@@ -8,24 +8,25 @@ TOOLS_DIR=tools
 VERSION=cross-gcc-10.3.0-pi_64
 mkdir -p ${TOOLS_DIR}
 pushd ${TOOLS_DIR}
-#rm -r *
-#wget https://netix.dl.sourceforge.net/project/raspberry-pi-cross-compilers/Bonus%20Raspberry%20Pi%20GCC%2064-Bit%20Toolchains/Raspberry%20Pi%20GCC%2064-Bit%20Cross-Compiler%20Toolchains/Bullseye/GCC%2010.3.0/${VERSION}.tar.gz
-#tar xf ${VERSION}.tar.gz
+rm -r *
+wget https://netix.dl.sourceforge.net/project/raspberry-pi-cross-compilers/Bonus%20Raspberry%20Pi%20GCC%2064-Bit%20Toolchains/Raspberry%20Pi%20GCC%2064-Bit%20Cross-Compiler%20Toolchains/Bullseye/GCC%2010.3.0/${VERSION}.tar.gz
+tar xf ${VERSION}.tar.gz
 TOOL_CHAIN=`ls -d */`
 echo "TOOL:" ${TOOL_CHAIN}
 popd
 
 # create some initial-files
-DEFAULT_TARGET="saph@192.168.25.222"
-DEFAULT_PASSWD="saph00"
-echo ${DEFAULT_TARGET} > SSHTARGET
+DEFAULT_TARGET="user@192.168.25.222"
+DEFAULT_PASSWD="password"
+[ ! -f "SSHTARGET" ] &&  echo ${DEFAULT_TARGET} > SSHTARGET
+[ ! -f ".sshpasswd" ] &&  echo ${DEFAULT_PASSWD} > .sshpasswd
 TOOLCHAIN_RELDIR=${TOOLS_DIR}/${TOOL_CHAIN}
 TOOLCHAIN_ABSDIR=`echo -n $(cd "$(dirname "$TOOLCHAIN_RELDIR")"; pwd)/$(basename "$TOOLCHAIN_RELDIR")`
 ROOTFS_ABSDIR=`echo -n $(cd "$(dirname "rootfs")"; pwd)/$(basename "rootfs")`
 echo "REL" ${TOOLCHAIN_RELDIR}
 echo "ABS" ${TOOLCHAIN_ABSDIR}
 echo -n ${TOOLCHAIN_ABSDIR} > TOOLCHAIN
-echo ${DEFAULT_PASSWD} > .sshpasswd
+
 
 sudo tee -a > PI.cmake  <<EOT
 set(CMAKE_VERBOSE_MAKEFILE ON)
